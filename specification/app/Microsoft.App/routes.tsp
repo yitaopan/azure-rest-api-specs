@@ -12,7 +12,7 @@ using TypeSpec.Versioning;
 using Azure.Core;
 using Azure.Core.Traits;
 
-namespace Microsoft.App;
+namespace Microsoft.App.DynamicSessions;
 
 alias SessionTraits = NoRepeatableRequests &
   NoConditionalRequests &
@@ -21,47 +21,52 @@ alias SessionTraits = NoRepeatableRequests &
 
 alias SessionOperations = Azure.Core.ResourceOperations<SessionTraits>;
 
-interface CodeExecution {
-  #suppress "@azure-tools/typespec-azure-core/use-standard-operations" ""
-  @doc("Execute code in a session.")
-  @route("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/sessionPools/{sessionPoolName}/code/execute")
-  executeCode is Foundations.Operation<
-    {
-      ...SubscriptionIdParameter;
-      ...ResourceGroupNameParameter;
-      ...SessionPoolNameParameter;
-      ...SessionIdentifier;
+#suppress "@azure-tools/typespec-azure-core/use-standard-operations" ""
+@doc("Execute code in a session.")
+@route("/codeExecute")
+op executeCode is Foundations.Operation<
+  {
+    ...SessionIdentifier;
 
-      @doc("The request to execute code.")
-      @body
-      codeExecutionRequest: CodeExecutionRequest;
-    },
-    CodeExecutionResponse,
-    {},
-    Foundations.ErrorResponse
-  >;
-}
+    @doc("The request to execute code.")
+    @body
+    codeExecutionRequest: SessionCodeExecutionRequest;
+  },
+  Foundations.AcceptedResponse | Foundations.ResourceOkResponse<SessionCodeExecutionResult>,
+  {},
+  Foundations.ErrorResponse
+>;
 
-interface CodeExecutionFiles {
+#suppress "@azure-tools/typespec-azure-core/use-standard-operations" ""
+@doc("Get the code execution result.")
+@route("/codeExecutionResult")
+op getCodeExecutionResult is Foundations.Operation<
+  {
+    ...SessionIdentifier;
+    ...CodeExecutionIdentifier;
+  },
+  SessionCodeExecutionResult,
+  {},
+  Foundations.ErrorResponse
+>;
+
+interface SessionResourceFiles {
   @doc("List the file resources.")
-  listFileMetadata is SessionOperations.ResourceList<CodeExecutionFile>;
+  listFilesMetadata is SessionOperations.ResourceList<SessionResourceFile>;
 
   @doc("Get the file resource.")
-  getFileMetadata is SessionOperations.ResourceRead<CodeExecutionFile>;
+  getFileMetadata is SessionOperations.ResourceRead<SessionResourceFile>;
 
   @doc("Delete the file.")
-  deleteFile is SessionOperations.ResourceDelete<CodeExecutionFile>;
+  deleteFile is SessionOperations.ResourceDelete<SessionResourceFile>;
 
   #suppress "@azure-tools/typespec-azure-core/use-standard-operations" ""
-  @doc("Get the content of the file.")
+  @doc("Download the file.")
   @get
-  @route("/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/sessionPools/{sessionPoolName}/files/content/{filename}")
-  getFileContent is Foundations.Operation<
+  @route("/files/{fileName}/download")
+  downloadFile is Foundations.Operation<
     {
-      ...SubscriptionIdParameter;
-      ...ResourceGroupNameParameter;
-      ...SessionPoolNameParameter;
-      ...CodeExecutionFileNameParameter;
+      ...SessionResourceFileNameParameter;
       ...SessionIdentifier;
     },
     bytes,
@@ -72,7 +77,7 @@ interface CodeExecutionFiles {
   #suppress "@azure-tools/typespec-azure-core/byos" ""
   @doc("Upload a file to a session.")
   uploadFile is SessionOperations.ResourceAction<
-    CodeExecutionFile,
+    SessionResourceFile,
     {
       @doc("The content type for the operation. Always multipart/form-data for this operation.")
       @header("content-type")
@@ -81,6 +86,6 @@ interface CodeExecutionFiles {
       @doc("The file to upload.")
       file: bytes;
     },
-    CodeExecutionFileCollection
+    SessionResourceFile
   >;
 }

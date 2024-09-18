@@ -1,7 +1,6 @@
 # Container Apps Data Plane Api
 
 > see https://aka.ms/autorest
-
 This is the AutoRest configuration file for Container Apps Data Plane Api.
 
 ## Getting Started
@@ -9,11 +8,9 @@ This is the AutoRest configuration file for Container Apps Data Plane Api.
 To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run:
 
 > `autorest readme.md`
-
 To see additional help and options, run:
 
 > `autorest --help`
-
 For other options on installation see [Installing AutoRest](https://aka.ms/autorest/install) on the AutoRest github page.
 
 ---
@@ -26,16 +23,14 @@ These are the global settings for the Container Apps Data Plane Api.
 
 ```yaml
 openapi-type: data-plane
-tag: package-2023-08-01-preview
+tag: package-2024-09-01
 ```
+### Tag: package-2024-09-01
+These settings apply only when `--tag=package-2024-09-01` is specified on the command line.
 
-### Tag: package-2023-08-01-preview
-
-These settings apply only when `--tag=package-2023-08-01-preview` is specified on the command line.
-
-```yaml $(tag) == 'package-2023-08-01-preview'
+```yaml $(tag) == 'package-2024-09-01'
 input-file:
-  - Microsoft.App/preview/2023-08-01-preview/containerapps.json
+  - Microsoft.App/stable/2024-09-01/containerapps.json
 ```
 
 ---

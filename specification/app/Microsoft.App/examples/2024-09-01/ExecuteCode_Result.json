@@ -1,0 +1,37 @@
+{
+  "title": "ExecuteCode_Result",
+  "operationId": "ExecuteCode",
+  "parameters": {
+    "api-version": "2024-09-01",
+    "subscriptionId": "ef738d04-769d-4834-82ff-e4ab80a86777",
+    "resourceGroupName": "testrg",
+    "sessionPoolName": "testsessionpool",
+    "identifier": "testidentidier",
+    "codeExecutionRequest": {
+      "codeInputType": "Inline",
+      "executionType": "Synchronous",
+      "networkStatus": "EgressEnabled",
+      "multiArrayStatus": "MultiArrayEnabled",
+      "code": "print(7*9)",
+      "timeoutInSeconds": 60
+    }
+  },
+  "responses": {
+    "200": {
+      "body": {
+        "codeInputType": "Inline",
+        "executionType": "Synchronous",
+        "networkStatus": "EgressEnabled",
+        "multiArrayStatus": "MultiArrayEnabled",
+        "code": "print(7*9)",
+        "timeoutInSeconds": 60,
+        "id": "1",
+        "status": "Success",
+        "stdout": "63/n",
+        "stderr": "",
+        "result": "",
+        "executionTimeInMilliseconds": 4
+      }
+    }
+  }
+}

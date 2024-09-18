@@ -2,59 +2,37 @@ import "./common.tsp";
 using TypeSpec.Http;
 using TypeSpec.Rest;
 
-namespace Microsoft.App;
+namespace Microsoft.App.DynamicSessions;
 
 @doc("The request to execute code.")
-model CodeExecutionRequest {
-  @doc("The properties for executing code.")
-  properties: CodeExecutionRequestProperties;
-}
-
-@doc("The response containing the result of the code execution.")
-model CodeExecutionResponse {
-  @doc("The properties of the code execution response.")
-  properties: CodeExecutionResponseProperties;
-}
-
-@doc("The properties of the code execution request.")
-model CodeExecutionRequestProperties {
+model SessionCodeExecutionRequest {
   @doc("The code input type of the code execution request.")
   codeInputType: CodeInputType;
 
   @doc("The execution type of the code execution request.")
   executionType: ExecutionType;
 
-  @doc("The code to execute.")
+  @doc("The network status of the code execution session.")
+  networkStatus: NetworkStatus;
+
+  @doc("The multi array status of the code execution session.")
+  multiArrayStatus: MultiArrayStatus;
+
+  @doc("The string of the code to execute, based on CodeInputType.")
   code: string;
 
   @doc("Code execution timeout in seconds.")
   timeoutInSeconds: int64;
 }
 
-@doc("Code input type.")
-union CodeInputType {
-  string,
+@doc("The result containing the result of the code execution.")
+model SessionCodeExecutionResult {
+  ...SessionCodeExecutionRequest;
 
-  @doc("Inline.")
-  inline: "inline",
+  @visibility("read")
+  @doc("Session code execution id.")
+  id: string;
 
-  @doc("InlineBase64.")
-  inlineBase64: "inlineBase64",
-
-  @doc("InlineText.")
-  inlineText: "inlineText",
-}
-
-@doc("Execution Type")
-union ExecutionType {
-  string,
-
-  @doc("Synchronous")
-  synchronous: "synchronous",
-}
-
-@doc("The properties of the code execution result.")
-model CodeExecutionResponseProperties {
   @doc("The status of the code execution, indicates whether succeeded or not.")
   status: CodeExecutionStatus;
 
@@ -70,6 +48,53 @@ model CodeExecutionResponseProperties {
 
   @doc("The execution time of the code in milliseconds.")
   executionTimeInMilliseconds: int64;
+}
+
+@doc("Code input type.")
+union CodeInputType {
+  string,
+
+  @doc("Inline.")
+  inline: "Inline",
+
+  @doc("InlineBase64.")
+  inlineBase64: "InlineBase64",
+
+  @doc("InlineText.")
+  inlineText: "InlineText",
+}
+
+@doc("Execution Type")
+union ExecutionType {
+  string,
+
+  @doc("Synchronous")
+  synchronous: "Synchronous",
+
+  @doc("Asynchronous")
+  asynchronous: "Asynchronous",
+}
+
+@doc("Network status.")
+union NetworkStatus {
+  string,
+
+  @doc("Session egress enabled.")
+  egressEnabled: "EgressEnabled",
+
+  @doc("Session egress disabled.")
+  egressDisabled: "EgressDisabled",
+}
+
+@doc("Multi array status.")
+union MultiArrayStatus {
+  string,
+
+  @doc("Multi array enabled")
+  multiArrayEnabled: "MultiArrayEnabled",
+
+  @doc("Multi array disabled.")
+  multiArrayDisabled: "MultiArrayDisabled",
 }
 
 @doc("Code execution status.")
