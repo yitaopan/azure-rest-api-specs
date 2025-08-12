@@ -898,7 +898,6 @@
       },
       "required": [
         "codeInputType",
-        "executionType",
         "code",
         "timeoutInSeconds"
       ]
