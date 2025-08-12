@@ -11,7 +11,7 @@ model SessionCodeExecutionRequest {
   codeInputType: CodeInputType;
 
   @doc("The execution type of the code execution request.")
-  executionType: ExecutionType;
+  executionType?: ExecutionType;
 
   @doc("The string of the code to execute, based on CodeInputType.")
   code: string;
